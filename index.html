@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Casa HQ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #fbfaf6;
+    --surface: #ffffff;
+    --sage: #3d5a47;
+    --sage-2: #e7f0e9;
+    --ink: #202124;
+    --muted: #6e6a63;
+    --line: #ded8cc;
+    --amber: #d4a853;
+    --clay: #c4714a;
+    --blue: #3a6ea5;
+    --blue-soft: #e8f0f8;
+    --plum: #705a7e;
+    --plum-soft: #f1eaf4;
+    --coral-soft: #fff0eb;
+    --shadow: 0 16px 40px rgba(42, 36, 28, 0.08);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      linear-gradient(135deg, rgba(58,110,165,0.08), transparent 32%),
+      linear-gradient(225deg, rgba(196,113,74,0.08), transparent 30%),
+      var(--paper);
+    color: var(--ink);
+    font-family: "DM Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.025'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  button, input, select, textarea {
+    font: inherit;
+  }
+
+  button {
+    border: 0;
+    cursor: pointer;
+  }
+
+  .app {
+    position: relative;
+    z-index: 1;
+    width: min(1180px, calc(100% - 28px));
+    margin: 0 auto;
+    padding: 20px 0 40px;
+  }
+
+  .hero {
+    display: grid;
+    grid-template-columns: 1.25fr 0.75fr;
+    gap: 18px;
+    align-items: stretch;
+    min-height: 246px;
+    margin-bottom: 16px;
+  }
+
+  .hero-main {
+    overflow: hidden;
+    border-radius: 8px;
+    color: white;
+    background:
+      linear-gradient(90deg, rgba(22,38,28,0.88), rgba(22,38,28,0.56)),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 520'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1'%3E%3Cstop stop-color='%232f4a39'/%3E%3Cstop offset='1' stop-color='%23c4714a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='520' fill='url(%23g)'/%3E%3Cpath d='M0 370 C180 320 260 430 420 380 S720 260 900 330 S1080 430 1200 350 L1200 520 L0 520Z' fill='%23fbfaf6' opacity='.2'/%3E%3Cpath d='M115 248 h150 v128 h-150z M145 248 v-64 l45-40 45 40 v64 M330 290 h90 v86 h-90z M455 210 h180 v166 h-180z M510 210 v-78 l35-32 35 32 v78 M700 260 h138 v116 h-138z M885 190 h180 v186 h-180z M930 190 v-82 l45-42 45 42 v82' fill='%23ffffff' opacity='.18'/%3E%3Ccircle cx='980' cy='92' r='52' fill='%23d4a853' opacity='.85'/%3E%3C/svg%3E") center/cover;
+    box-shadow: var(--shadow);
+    padding: clamp(24px, 5vw, 42px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    width: fit-content;
+    padding: 6px 10px;
+    border: 1px solid rgba(255,255,255,0.35);
+    border-radius: 999px;
+    background: rgba(255,255,255,0.11);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    margin: 28px 0 8px;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: clamp(2.7rem, 8vw, 5.3rem);
+    line-height: 0.92;
+    letter-spacing: 0;
+  }
+
+  .hero p {
+    margin: 0;
+    max-width: 560px;
+    color: rgba(255,255,255,0.82);
+    font-size: 1.02rem;
+    line-height: 1.55;
+  }
+
+  .hero-side {
+    display: grid;
+    gap: 12px;
+  }
+
+  .clock-card, .focus-card {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.86);
+    box-shadow: var(--shadow);
+    padding: 18px;
+  }
+
+  .date-large {
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1;
+  }
+
+  .date-meta, .muted {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  .focus-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
+    background: var(--sage);
+    color: white;
+    border-color: transparent;
+  }
+
+  .focus-card .muted { color: rgba(255,255,255,0.72); }
+
+  .progress {
+    height: 9px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.18);
+  }
+
+  .progress span {
+    display: block;
+    height: 100%;
+    width: 0;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--amber), #ffffff);
+    transition: width 0.25s ease;
+  }
+
+  .toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 10px 0 14px;
+    backdrop-filter: blur(14px);
+  }
+
+  .tab {
+    flex: 0 0 auto;
+    min-height: 42px;
+    padding: 0 16px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: rgba(255,255,255,0.74);
+    color: var(--muted);
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+
+  .tab.active {
+    color: #fff;
+    background: var(--sage);
+    border-color: var(--sage);
+  }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .sync-status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    min-height: 42px;
+    margin: -4px 0 14px;
+    padding: 9px 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.78);
+    color: var(--muted);
+    font-size: 0.86rem;
+    font-weight: 700;
+  }
+
+  .sync-status strong {
+    color: var(--sage);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 14px;
+  }
+
+  .card {
+    grid-column: span 6;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.88);
+    box-shadow: var(--shadow);
+    padding: 18px;
+  }
+
+  .card.full { grid-column: 1 / -1; }
+  .card.third { grid-column: span 4; }
+
+  .card-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .card-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .icon {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    border-radius: 8px;
+    background: var(--sage-2);
+    font-size: 1.15rem;
+  }
+
+  h2, h3 {
+    margin: 0;
+    font-family: "Playfair Display", Georgia, serif;
+    letter-spacing: 0;
+  }
+
+  h2 { font-size: 1.42rem; }
+  h3 { font-size: 1.1rem; }
+
+  .badge {
+    border-radius: 999px;
+    padding: 6px 10px;
+    background: var(--blue-soft);
+    color: var(--blue);
+    font-size: 0.74rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    white-space: nowrap;
+  }
+
+  .task-list, .grocery-list, .day-list {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .task, .grocery-item, .day-card {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr) auto auto;
+    gap: 10px;
+    align-items: start;
+    min-height: 48px;
+    padding: 10px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    background: #faf8f2;
+  }
+
+  .task:hover, .grocery-item:hover {
+    border-color: var(--line);
+    background: #fff;
+  }
+
+  .task.done, .grocery-item.done {
+    opacity: 0.56;
+  }
+
+  .task.done .task-name, .grocery-item.done .task-name {
+    text-decoration: line-through;
+  }
+
+  input[type="checkbox"] {
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    margin: 2px 0 0;
+    border: 2px solid #c9c1b1;
+    border-radius: 6px;
+    background: white;
+  }
+
+  input[type="checkbox"]:checked {
+    border-color: var(--sage);
+    background: var(--sage);
+    background-image: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2.2 7.2 5.5 10.4 11.8 3.6' fill='none' stroke='white' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  .task-name {
+    display: block;
+    font-weight: 800;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+  }
+
+  .task-note {
+    display: block;
+    margin-top: 2px;
+    color: var(--muted);
+    font-size: 0.83rem;
+    line-height: 1.35;
+  }
+
+  .owner {
+    border-radius: 999px;
+    padding: 4px 8px;
+    color: var(--plum);
+    background: var(--plum-soft);
+    font-size: 0.75rem;
+    font-weight: 800;
+  }
+
+  .icon-btn {
+    width: 34px;
+    height: 34px;
+    display: inline-grid;
+    place-items: center;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--muted);
+  }
+
+  .icon-btn:hover {
+    background: var(--coral-soft);
+    color: var(--clay);
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .btn {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 8px;
+    padding: 0 14px;
+    background: var(--sage);
+    color: white;
+    font-weight: 800;
+  }
+
+  .btn.secondary {
+    background: #ece7dd;
+    color: var(--ink);
+  }
+
+  .btn.ghost {
+    border: 1px solid var(--line);
+    background: white;
+    color: var(--muted);
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 150px 120px auto;
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .grocery-row {
+    grid-template-columns: minmax(0, 1fr) 150px auto;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: white;
+    color: var(--ink);
+    padding: 10px 12px;
+    outline: none;
+  }
+
+  textarea {
+    min-height: 170px;
+    resize: vertical;
+    line-height: 1.5;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(58,110,165,0.15);
+  }
+
+  .metric-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .metric {
+    min-height: 86px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: white;
+    padding: 12px;
+  }
+
+  .metric strong {
+    display: block;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 1.5rem;
+    line-height: 1;
+  }
+
+  .metric span {
+    display: block;
+    margin-top: 7px;
+    color: var(--muted);
+    font-size: 0.8rem;
+    line-height: 1.25;
+  }
+
+  .week-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(126px, 1fr));
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .day-card {
+    grid-template-columns: 1fr;
+    align-content: start;
+    background: white;
+  }
+
+  .day-card.today {
+    border-color: var(--sage);
+    box-shadow: inset 0 0 0 1px var(--sage);
+  }
+
+  .day-card strong {
+    color: var(--sage);
+  }
+
+  .day-card ul {
+    margin: 8px 0 0;
+    padding-left: 16px;
+    color: var(--muted);
+    font-size: 0.86rem;
+    line-height: 1.45;
+  }
+
+  .meal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(140px, 1fr));
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .meal-card {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: white;
+    padding: 12px;
+  }
+
+  .meal-card label {
+    display: block;
+    color: var(--sage);
+    font-weight: 900;
+    margin-bottom: 8px;
+  }
+
+  .pill-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    border-radius: 999px;
+    padding: 0 10px;
+    background: var(--blue-soft);
+    color: var(--blue);
+    font-size: 0.82rem;
+    font-weight: 800;
+  }
+
+  .empty {
+    border: 1px dashed #cfc6b7;
+    border-radius: 8px;
+    padding: 20px;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  .auth-view {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    position: relative;
+    z-index: 2;
+    padding: 20px;
+  }
+
+  .auth-card {
+    width: min(100%, 440px);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.9);
+    box-shadow: var(--shadow);
+    padding: 24px;
+  }
+
+  .auth-card h1 {
+    margin: 10px 0 8px;
+    color: var(--sage);
+    font-size: clamp(2.4rem, 10vw, 4rem);
+  }
+
+  .auth-card p {
+    margin: 0 0 18px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .auth-form {
+    display: grid;
+    gap: 10px;
+  }
+
+  .auth-message {
+    min-height: 22px;
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 0.88rem;
+    font-weight: 700;
+  }
+
+  .auth-hidden,
+  .app.auth-hidden {
+    display: none;
+  }
+
+  @media (max-width: 860px) {
+    .hero, .grid, .metric-row {
+      grid-template-columns: 1fr;
+    }
+
+    .card, .card.third {
+      grid-column: 1 / -1;
+    }
+
+    .form-row, .grocery-row {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 540px) {
+    .app {
+      width: min(100% - 18px, 1180px);
+      padding-top: 9px;
+    }
+
+    .hero-main, .clock-card, .focus-card, .card {
+      padding: 14px;
+    }
+
+    .card-head {
+      flex-direction: column;
+    }
+
+    .task, .grocery-item {
+      grid-template-columns: 28px minmax(0, 1fr);
+    }
+
+    .task .owner, .task .icon-btn, .grocery-item .icon-btn {
+      grid-column: 2;
+      width: fit-content;
+    }
+  }
+</style>
+</head>
+<body>
+<section class="auth-view" id="authView">
+  <div class="auth-card">
+    <span class="eyebrow" style="color:var(--sage);border-color:var(--line);background:var(--sage-2)">Private household</span>
+    <h1>Casa HQ</h1>
+    <p>Sign in once with an approved household email. This device will stay signed in until you tap Sign Out or clear browser data.</p>
+    <form class="auth-form" id="authForm">
+      <input id="authEmail" type="email" autocomplete="email" required placeholder="you@example.com">
+      <button class="btn" type="submit">Send Magic Link</button>
+    </form>
+    <div class="auth-message" id="authMessage">Only invited emails can access the shared home data.</div>
+  </div>
+</section>
+
+<main class="app auth-hidden" id="appView">
+  <section class="hero" aria-label="Casa HQ overview">
+    <div class="hero-main">
+      <div>
+        <span class="eyebrow">Home command center</span>
+        <h1>Casa HQ</h1>
+        <p>Your home, running like clockwork without the overwhelm. Daily resets, weekly chores, groceries, meals, maintenance, and the little notes that keep everyone aligned.</p>
+      </div>
+      <div class="pill-row" aria-label="Home details">
+        <span class="pill">4 Bedrooms</span>
+        <span class="pill">2 Adults</span>
+        <span class="pill">1 Pet</span>
+        <span class="pill">Remote Work</span>
+      </div>
+    </div>
+    <div class="hero-side">
+      <div class="clock-card">
+        <div class="date-large" id="dateDay">Today</div>
+        <div class="date-meta" id="dateMeta">Loading date</div>
+      </div>
+      <div class="focus-card">
+        <div>
+          <h2 id="focusTitle">Today’s Flow</h2>
+          <p class="muted" id="focusCopy">Knock out the essentials, then let the house be good enough.</p>
+        </div>
+        <div>
+          <div class="progress" aria-label="Today progress"><span id="todayProgress"></span></div>
+          <div class="date-meta" id="todayProgressLabel">0% complete</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="toolbar" aria-label="Casa HQ sections">
+    <button class="tab active" data-panel="today">Today</button>
+    <button class="tab" data-panel="week">Week</button>
+    <button class="tab" data-panel="meals">Meals</button>
+    <button class="tab" data-panel="groceries">Groceries</button>
+    <button class="tab" data-panel="home">Home</button>
+    <button class="tab" data-panel="notes">Notes</button>
+  </nav>
+
+  <div class="sync-status">
+    <span id="syncStatus"><strong>Local ready.</strong> Supabase sync will start after setup.</span>
+    <div class="actions" style="margin:0">
+      <button class="btn ghost" id="manualSync" type="button">Sync</button>
+      <button class="btn secondary" id="signOut" type="button">Sign Out</button>
+    </div>
+  </div>
+
+  <section class="panel active" id="panel-today">
+    <div class="metric-row" id="metrics"></div>
+    <div class="grid">
+      <article class="card">
+        <div class="card-head">
+          <div class="card-title"><span class="icon">☀</span><div><h2>Morning Flow</h2><span class="muted">About 15 minutes before work starts</span></div></div>
+          <span class="badge">Daily</span>
+        </div>
+        <ul class="task-list" id="morningTasks"></ul>
+      </article>
+      <article class="card">
+        <div class="card-head">
+          <div class="card-title"><span class="icon">☾</span><div><h2>Evening Reset</h2><span class="muted">About 10 minutes before you wind down</span></div></div>
+          <span class="badge">Daily</span>
+        </div>
+        <ul class="task-list" id="eveningTasks"></ul>
+      </article>
+      <article class="card full">
+        <div class="card-head">
+          <div class="card-title"><span class="icon">＋</span><div><h2>Add a Task</h2><span class="muted">Custom tasks sync to the shared household database</span></div></div>
+        </div>
+        <form class="form-row" id="taskForm">
+          <input id="taskName" required maxlength="80" placeholder="Task, e.g. Water plants">
+          <select id="taskGroup" aria-label="Task group">
+            <option value="morning">Morning</option>
+            <option value="evening">Evening</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+            <option value="maintenance">Maintenance</option>
+          </select>
+          <input id="taskOwner" maxlength="18" placeholder="Owner">
+          <button class="btn" type="submit">Add</button>
+        </form>
+        <div class="actions">
+          <button class="btn secondary" id="resetToday" type="button">Reset Today</button>
+          <button class="btn ghost" id="resetAll" type="button">Reset All Checks</button>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-week">
+    <article class="card full">
+      <div class="card-head">
+        <div class="card-title"><span class="icon">▦</span><div><h2>Weekly Rhythm</h2><span class="muted">A humane split so cleaning does not become a weekend landslide</span></div></div>
+        <span class="badge">This week</span>
+      </div>
+      <div class="week-grid" id="weekGrid"></div>
+    </article>
+    <div class="grid" style="margin-top:14px">
+      <article class="card">
+        <div class="card-head">
+          <div class="card-title"><span class="icon">◌</span><div><h2>Weekly Tasks</h2><span class="muted">Cleaning, laundry, and home check-in</span></div></div>
+          <span class="badge">Weekly</span>
+        </div>
+        <ul class="task-list" id="weeklyTasks"></ul>
+      </article>
+      <article class="card">
+        <div class="card-head">
+          <div class="card-title"><span class="icon">◇</span><div><h2>Monthly Tasks</h2><span class="muted">Money date, supplies, deep-dive area</span></div></div>
+          <span class="badge">Monthly</span>
+        </div>
+        <ul class="task-list" id="monthlyTasks"></ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-meals">
+    <article class="card full">
+      <div class="card-head">
+        <div class="card-title"><span class="icon">▤</span><div><h2>Meal Plan</h2><span class="muted">Plan 4 or 5 dinners, leave breathing room for easy nights</span></div></div>
+        <button class="btn secondary" id="clearMeals" type="button">Clear Meals</button>
+      </div>
+      <div class="meal-grid" id="mealGrid"></div>
+    </article>
+    <div class="grid" style="margin-top:14px">
+      <article class="card">
+        <div class="card-head">
+          <div class="card-title"><span class="icon">◐</span><div><h2>Go-To Lunches</h2><span class="muted">Decision fatigue blockers for remote work days</span></div></div>
+        </div>
+        <div class="pill-row">
+          <span class="pill">Rice bowl + protein</span>
+          <span class="pill">Eggs + toast + greens</span>
+          <span class="pill">Soup or leftovers</span>
+          <span class="pill">Tuna salad plate</span>
+        </div>
+      </article>
+      <article class="card">
+        <div class="card-head">
+          <div class="card-title"><span class="icon">✓</span><div><h2>Sunday Prep</h2><span class="muted">Small moves that make weekday meals easier</span></div></div>
+        </div>
+        <ul class="task-list" id="mealPrepTasks"></ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-groceries">
+    <article class="card full">
+      <div class="card-head">
+        <div class="card-title"><span class="icon">🛒</span><div><h2>Grocery List</h2><span class="muted">Add as you run low. Check items off while shopping.</span></div></div>
+        <span class="badge" id="groceryCount">0 items</span>
+      </div>
+      <form class="form-row grocery-row" id="groceryForm">
+        <input id="groceryName" required maxlength="60" placeholder="Item, e.g. coffee filters">
+        <select id="groceryAisle" aria-label="Aisle">
+          <option>Produce</option>
+          <option>Pantry</option>
+          <option>Dairy</option>
+          <option>Meat/Seafood</option>
+          <option>Frozen</option>
+          <option>Household</option>
+          <option>Pet</option>
+          <option>Other</option>
+        </select>
+        <button class="btn" type="submit">Add</button>
+      </form>
+      <ul class="grocery-list" id="groceryList" style="margin-top:14px"></ul>
+      <div class="actions">
+        <button class="btn secondary" id="clearBought" type="button">Clear Bought</button>
+        <button class="btn ghost" id="seedGroceries" type="button">Add Staples</button>
+      </div>
+    </article>
+  </section>
+
+  <section class="panel" id="panel-home">
+    <div class="grid">
+      <article class="card">
+        <div class="card-head">
+          <div class="card-title"><span class="icon">⌂</span><div><h2>Home Maintenance</h2><span class="muted">Prevent problems before they start</span></div></div>
+          <span class="badge">Seasonal</span>
+        </div>
+        <ul class="task-list" id="maintenanceTasks"></ul>
+      </article>
+      <article class="card">
+        <div class="card-head">
+          <div class="card-title"><span class="icon">●</span><div><h2>House Systems</h2><span class="muted">Shared rules that reduce friction</span></div></div>
+        </div>
+        <ul class="day-list">
+          <li class="day-card"><strong>Refill rule</strong><span class="muted">Buy household essentials when they hit roughly 40% remaining.</span></li>
+          <li class="day-card"><strong>Guest rooms</strong><span class="muted">They stay in rest mode until guests are scheduled.</span></li>
+          <li class="day-card"><strong>Work boundary</strong><span class="muted">Work hours are work. After hours, the house gets to be home again.</span></li>
+          <li class="day-card"><strong>Weekly check-in</strong><span class="muted">Ten minutes on Sunday: what is coming up, what needs doing, who owns it.</span></li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-notes">
+    <div class="grid">
+      <article class="card">
+        <div class="card-head">
+          <div class="card-title"><span class="icon">✎</span><div><h2>Home Notes</h2><span class="muted">Guests, repairs, reminders, things to talk about</span></div></div>
+          <span class="badge" id="savedStatus">Saved</span>
+        </div>
+        <textarea id="homeNotes" placeholder="Example: Schedule HVAC check, buy guest towels, decide who handles Friday laundry..."></textarea>
+      </article>
+      <article class="card">
+        <div class="card-head">
+          <div class="card-title"><span class="icon">★</span><div><h2>Golden Rules</h2><span class="muted">When in doubt, come back to these</span></div></div>
+        </div>
+        <ul class="day-list">
+          <li class="day-card"><strong>One touch rule</strong><span class="muted">Put things back immediately, not in a temporary pile.</span></li>
+          <li class="day-card"><strong>Progress over perfection</strong><span class="muted">A partially reset home is still a win.</span></li>
+          <li class="day-card"><strong>Pair tasks with pleasure</strong><span class="muted">Playlist, podcast, or show. Make chores less bare-knuckle.</span></li>
+          <li class="day-card"><strong>Systems beat willpower</strong><span class="muted">If it is on the rhythm, you do not have to re-decide it.</span></li>
+        </ul>
+      </article>
+    </div>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const supabaseUrl = "https://skqewygbdqqsujrqodbn.supabase.co";
+const supabasePublishableKey = "sb_publishable_9YlUkStsACszWKknwr47-Q_953LpHaz";
+const storeKey = "casa-hq-v2";
+const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const db = window.supabase ? window.supabase.createClient(supabaseUrl, supabasePublishableKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true,
+    storageKey: "casa-hq-auth"
+  }
+}) : null;
+let syncTimer;
+let isLoadingRemote = false;
+let lastRemoteLoad = 0;
+let currentSession = null;
+let refreshTimer;
+
+const seed = {
+  tasks: [
+    { id: "make-bed", group: "morning", name: "Make the bed", note: "Sets the tone for the whole day", owner: "Home", done: false },
+    { id: "kitchen-am", group: "morning", name: "Wipe kitchen counters and dishwasher", note: "Prevents the pile-up effect", owner: "Home", done: false },
+    { id: "pet-am", group: "morning", name: "Pet food and fresh water", note: "Non-negotiable first thing", owner: "Pet", done: false },
+    { id: "quick-tidy", group: "morning", name: "Quick tidy of living spaces", note: "Return anything out of place to its home", owner: "All", done: false },
+    { id: "kitchen-pm", group: "evening", name: "Dishes done and kitchen closed", note: "Closing the kitchen is the move", owner: "Home", done: false },
+    { id: "surfaces-pm", group: "evening", name: "Surfaces cleared in main rooms", note: "Living room, dining, and home offices", owner: "All", done: false },
+    { id: "pet-pm", group: "evening", name: "Pet evening routine", note: "Final feed, walk if needed, settle", owner: "Pet", done: false },
+    { id: "tomorrow", group: "evening", name: "Set out anything for tomorrow", note: "Water bottle, bag, supplements, keys", owner: "You", done: false },
+    { id: "offices", group: "weekly", name: "Monday: Offices", note: "Vacuum, dust, wipe desks", owner: "Workspaces", done: false },
+    { id: "kitchen-deep", group: "weekly", name: "Tuesday: Kitchen deep clean", note: "Stovetop, sink, microwave, appliance fronts", owner: "Kitchen", done: false },
+    { id: "bathrooms", group: "weekly", name: "Wednesday: Bathrooms", note: "Toilet, sink, mirror, counters", owner: "Bath", done: false },
+    { id: "vacuum", group: "weekly", name: "Thursday: Vacuum all floors", note: "Extra focus on pet areas", owner: "Floors", done: false },
+    { id: "laundry", group: "weekly", name: "Friday: Start laundry and mop floors", note: "Fold Saturday morning with a show", owner: "Laundry", done: false },
+    { id: "meal-plan", group: "weekly", name: "Sunday: Meal plan and grocery order", note: "Check fridge, choose dinners, order groceries", owner: "Food", done: false },
+    { id: "money-date", group: "monthly", name: "Money date", note: "Bills, annual goal, subscriptions", owner: "Finance", done: false },
+    { id: "home-deep-dive", group: "monthly", name: "Pick one deep-dive area", note: "Fridge, closet, guest room, office, entryway", owner: "Home", done: false },
+    { id: "pet-supplies", group: "monthly", name: "Pet care check", note: "Supplies, prevention meds, grooming", owner: "Pet", done: false },
+    { id: "filter", group: "maintenance", name: "Furnace filter change", note: "Every 1 to 3 months. Write the date on it.", owner: "HVAC", done: false },
+    { id: "alarms", group: "maintenance", name: "Smoke and CO alarm test", note: "First of every month, takes 10 seconds", owner: "Safety", done: false },
+    { id: "appliances", group: "maintenance", name: "Appliance wipe-down", note: "Fridge exterior and washing machine drum clean", owner: "Home", done: false },
+    { id: "prep-grains", group: "mealPrep", name: "Prep one batch item", note: "Grains, protein, or chopped vegetables", owner: "Food", done: false },
+    { id: "use-first", group: "mealPrep", name: "Use-up-first check", note: "Build meals around what is already open", owner: "Food", done: false },
+    { id: "easy-nights", group: "mealPrep", name: "Protect two easy nights", note: "Leftovers, eggs, freezer meal, or takeout", owner: "Food", done: false }
+  ],
+  groceries: [
+    { id: "coffee", name: "Coffee", aisle: "Pantry", done: false },
+    { id: "paper-towels", name: "Paper towels", aisle: "Household", done: false },
+    { id: "pet-food", name: "Pet food", aisle: "Pet", done: false }
+  ],
+  meals: {
+    Sunday: "", Monday: "", Tuesday: "", Wednesday: "", Thursday: "", Friday: "", Saturday: ""
+  },
+  notes: ""
+};
+
+let state = load();
+
+function load() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(storeKey));
+    if (!saved) return structuredClone(seed);
+    return {
+      ...structuredClone(seed),
+      ...saved,
+      tasks: saved.tasks || structuredClone(seed.tasks),
+      groceries: saved.groceries || structuredClone(seed.groceries),
+      meals: { ...seed.meals, ...(saved.meals || {}) }
+    };
+  } catch {
+    return structuredClone(seed);
+  }
+}
+
+function save() {
+  localStorage.setItem(storeKey, JSON.stringify(state));
+  scheduleSupabaseSave();
+}
+
+function saveLocalOnly() {
+  localStorage.setItem(storeKey, JSON.stringify(state));
+}
+
+function setSyncStatus(message, mode = "info") {
+  const prefix = {
+    info: "Sync",
+    ok: "Synced",
+    warn: "Local mode",
+    error: "Sync issue"
+  }[mode] || "Sync";
+  document.getElementById("syncStatus").innerHTML = `<strong>${prefix}.</strong> ${escapeHtml(message)}`;
+}
+
+function setAuthMessage(message) {
+  document.getElementById("authMessage").textContent = message;
+}
+
+function showSignedOut(message = "Only invited emails can access the shared home data.") {
+  currentSession = null;
+  document.getElementById("authView").classList.remove("auth-hidden");
+  document.getElementById("appView").classList.add("auth-hidden");
+  setAuthMessage(message);
+  if (refreshTimer) clearInterval(refreshTimer);
+}
+
+function showSignedIn(session) {
+  currentSession = session;
+  document.getElementById("authView").classList.add("auth-hidden");
+  document.getElementById("appView").classList.remove("auth-hidden");
+  setSyncStatus(`Signed in as ${session.user.email}. Loading shared data...`);
+  renderAll();
+  loadFromSupabase({ silent: false });
+  if (refreshTimer) clearInterval(refreshTimer);
+  refreshTimer = setInterval(() => loadFromSupabase({ silent: true }), 30000);
+}
+
+async function initializeAuth() {
+  if (!db) {
+    showSignedOut("Supabase could not load. Check your internet connection and refresh.");
+    return;
+  }
+  const { data, error } = await db.auth.getSession();
+  if (error) {
+    showSignedOut(error.message);
+    return;
+  }
+  if (data.session) {
+    showSignedIn(data.session);
+  } else {
+    showSignedOut("Sign in once on this device. Casa HQ will remember you after the magic link opens.");
+  }
+  db.auth.onAuthStateChange((_event, session) => {
+    if (session) showSignedIn(session);
+    else showSignedOut("Signed out. Use an approved household email to sign back in.");
+  });
+}
+
+function scheduleSupabaseSave() {
+  if (!db || !currentSession || isLoadingRemote) return;
+  setSyncStatus("Saving shared household data...");
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(saveToSupabase, 450);
+}
+
+function taskToRow(task, index) {
+  return {
+    id: task.id,
+    group_name: task.group,
+    name: task.name,
+    note: task.note || "",
+    owner: task.owner || "Home",
+    done: !!task.done,
+    sort_order: index,
+    updated_at: new Date().toISOString()
+  };
+}
+
+function rowToTask(row) {
+  return {
+    id: row.id,
+    group: row.group_name,
+    name: row.name,
+    note: row.note || "",
+    owner: row.owner || "Home",
+    done: !!row.done
+  };
+}
+
+function groceryToRow(item, index) {
+  return {
+    id: item.id,
+    name: item.name,
+    aisle: item.aisle || "Other",
+    done: !!item.done,
+    sort_order: index,
+    updated_at: new Date().toISOString()
+  };
+}
+
+function rowToGrocery(row) {
+  return {
+    id: row.id,
+    name: row.name,
+    aisle: row.aisle || "Other",
+    done: !!row.done
+  };
+}
+
+function mealsToRows() {
+  return days.map(day => ({
+    day,
+    meal: state.meals[day] || "",
+    updated_at: new Date().toISOString()
+  }));
+}
+
+async function loadFromSupabase({ silent = false } = {}) {
+  if (!db) {
+    setSyncStatus("Supabase client could not load. Check your internet connection.", "warn");
+    return;
+  }
+  if (!currentSession) {
+    setSyncStatus("Sign in before syncing shared data.", "warn");
+    return;
+  }
+  if (Date.now() - lastRemoteLoad < 1500) return;
+  lastRemoteLoad = Date.now();
+  if (!silent) setSyncStatus("Loading shared household data...");
+  isLoadingRemote = true;
+  try {
+    const [taskResult, groceryResult, mealResult, noteResult] = await Promise.all([
+      db.from("casa_tasks").select("*").order("sort_order", { ascending: true }),
+      db.from("casa_groceries").select("*").order("sort_order", { ascending: true }),
+      db.from("casa_meals").select("*"),
+      db.from("casa_notes").select("*").eq("id", "home").maybeSingle()
+    ]);
+
+    const error = taskResult.error || groceryResult.error || mealResult.error || noteResult.error;
+    if (error) throw error;
+
+    const hasRemoteData = taskResult.data.length || groceryResult.data.length || mealResult.data.length || noteResult.data;
+    if (hasRemoteData) {
+      state.tasks = taskResult.data.length ? taskResult.data.map(rowToTask) : state.tasks;
+      state.groceries = groceryResult.data.length ? groceryResult.data.map(rowToGrocery) : state.groceries;
+      state.meals = { ...seed.meals };
+      mealResult.data.forEach(row => {
+        if (days.includes(row.day)) state.meals[row.day] = row.meal || "";
+      });
+      state.notes = noteResult.data?.body || state.notes || "";
+      saveLocalOnly();
+      renderAll();
+      setSyncStatus("Shared data loaded.");
+    } else {
+      await saveToSupabase({ silent: true });
+      setSyncStatus("Shared database seeded.");
+    }
+  } catch (error) {
+    setSyncStatus(`${error.message}. Paste the setup SQL in Supabase, then tap Sync.`, "warn");
+  } finally {
+    isLoadingRemote = false;
+  }
+}
+
+async function saveToSupabase({ silent = false } = {}) {
+  if (!db) return;
+  if (!currentSession) {
+    setSyncStatus("Sign in before saving shared data.", "warn");
+    return;
+  }
+  if (!silent) setSyncStatus("Saving shared household data...");
+  try {
+    const taskRows = state.tasks.map(taskToRow);
+    const groceryRows = state.groceries.map(groceryToRow);
+
+    await db.from("casa_tasks").delete().neq("id", "__keep__");
+    if (taskRows.length) {
+      const { error } = await db.from("casa_tasks").insert(taskRows);
+      if (error) throw error;
+    }
+
+    await db.from("casa_groceries").delete().neq("id", "__keep__");
+    if (groceryRows.length) {
+      const { error } = await db.from("casa_groceries").insert(groceryRows);
+      if (error) throw error;
+    }
+
+    const { error: mealsError } = await db.from("casa_meals").upsert(mealsToRows(), { onConflict: "day" });
+    if (mealsError) throw mealsError;
+
+    const { error: notesError } = await db.from("casa_notes").upsert({
+      id: "home",
+      body: state.notes || "",
+      updated_at: new Date().toISOString()
+    }, { onConflict: "id" });
+    if (notesError) throw notesError;
+
+    setSyncStatus("Saved to Supabase.");
+  } catch (error) {
+    setSyncStatus(`${error.message}. Your changes are still saved locally.`, "error");
+  }
+}
+
+function uid(prefix) {
+  return prefix + "-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
+
+function todayName() {
+  return days[new Date().getDay()];
+}
+
+function setDate() {
+  const now = new Date();
+  document.getElementById("dateDay").textContent = days[now.getDay()];
+  document.getElementById("dateMeta").textContent = now.toLocaleDateString(undefined, {
+    month: "long",
+    day: "numeric",
+    year: "numeric"
+  });
+}
+
+function taskTemplate(task) {
+  return `
+    <li class="task ${task.done ? "done" : ""}" data-id="${task.id}">
+      <input type="checkbox" ${task.done ? "checked" : ""} aria-label="Complete ${escapeHtml(task.name)}">
+      <div>
+        <span class="task-name">${escapeHtml(task.name)}</span>
+        <span class="task-note">${escapeHtml(task.note || "Custom home task")}</span>
+      </div>
+      <span class="owner">${escapeHtml(task.owner || "Home")}</span>
+      <button class="icon-btn" type="button" data-task-delete="${task.id}" title="Remove task" aria-label="Remove ${escapeHtml(task.name)}">×</button>
+    </li>
+  `;
+}
+
+function renderTaskGroup(group, elementId) {
+  const tasks = state.tasks.filter(task => task.group === group);
+  const el = document.getElementById(elementId);
+  el.innerHTML = tasks.length ? tasks.map(taskTemplate).join("") : `<li class="empty">No tasks here yet.</li>`;
+}
+
+function renderTasks() {
+  renderTaskGroup("morning", "morningTasks");
+  renderTaskGroup("evening", "eveningTasks");
+  renderTaskGroup("weekly", "weeklyTasks");
+  renderTaskGroup("monthly", "monthlyTasks");
+  renderTaskGroup("maintenance", "maintenanceTasks");
+  renderTaskGroup("mealPrep", "mealPrepTasks");
+  renderMetrics();
+}
+
+function renderMetrics() {
+  const total = state.tasks.length;
+  const done = state.tasks.filter(task => task.done).length;
+  const todayTasks = state.tasks.filter(task => task.group === "morning" || task.group === "evening");
+  const todayDone = todayTasks.filter(task => task.done).length;
+  const groceryOpen = state.groceries.filter(item => !item.done).length;
+  const plannedMeals = Object.values(state.meals).filter(Boolean).length;
+  const pct = todayTasks.length ? Math.round((todayDone / todayTasks.length) * 100) : 0;
+
+  document.getElementById("todayProgress").style.width = pct + "%";
+  document.getElementById("todayProgressLabel").textContent = `${pct}% complete`;
+  document.getElementById("metrics").innerHTML = [
+    [`${todayDone}/${todayTasks.length}`, "daily tasks complete"],
+    [`${done}/${total}`, "all checks complete"],
+    [groceryOpen, "open grocery items"],
+    [`${plannedMeals}/7`, "meals planned"]
+  ].map(([value, label]) => `<div class="metric"><strong>${value}</strong><span>${label}</span></div>`).join("");
+}
+
+function renderWeek() {
+  const rhythm = {
+    Sunday: ["Meal plan", "Grocery order", "10-min home check-in", "Prep one batch item"],
+    Monday: ["Morning flow", "Offices", "Cook from the plan"],
+    Tuesday: ["Kitchen deep clean", "Pantry/fridge check", "Evening reset"],
+    Wednesday: ["Bathrooms", "Midweek laundry check", "Pet routine"],
+    Thursday: ["Vacuum all floors", "Reset workspaces", "Easy dinner"],
+    Friday: ["Laundry started", "Floors mopped", "Week wrap-up"],
+    Saturday: ["Fold laundry", "Monthly task if due", "Rest and recharge"]
+  };
+  const today = todayName();
+  document.getElementById("weekGrid").innerHTML = days.map(day => `
+    <div class="day-card ${day === today ? "today" : ""}">
+      <strong>${day}</strong>
+      <ul>${rhythm[day].map(item => `<li>${item}</li>`).join("")}</ul>
+    </div>
+  `).join("");
+}
+
+function renderMeals() {
+  document.getElementById("mealGrid").innerHTML = days.map(day => `
+    <div class="meal-card">
+      <label for="meal-${day}">${day}</label>
+      <input id="meal-${day}" data-day="${day}" value="${escapeAttr(state.meals[day] || "")}" placeholder="Dinner plan">
+    </div>
+  `).join("");
+}
+
+function groceryTemplate(item) {
+  return `
+    <li class="grocery-item ${item.done ? "done" : ""}" data-id="${item.id}">
+      <input type="checkbox" ${item.done ? "checked" : ""} aria-label="Bought ${escapeHtml(item.name)}">
+      <div>
+        <span class="task-name">${escapeHtml(item.name)}</span>
+        <span class="task-note">${escapeHtml(item.aisle)}</span>
+      </div>
+      <button class="icon-btn" type="button" data-delete="${item.id}" title="Remove item" aria-label="Remove ${escapeHtml(item.name)}">×</button>
+    </li>
+  `;
+}
+
+function renderGroceries() {
+  const sorted = [...state.groceries].sort((a, b) => Number(a.done) - Number(b.done) || a.aisle.localeCompare(b.aisle));
+  document.getElementById("groceryList").innerHTML = sorted.length ? sorted.map(groceryTemplate).join("") : `<li class="empty">Your grocery list is clear.</li>`;
+  const open = state.groceries.filter(item => !item.done).length;
+  document.getElementById("groceryCount").textContent = `${open} open`;
+}
+
+function renderNotes() {
+  document.getElementById("homeNotes").value = state.notes || "";
+}
+
+function renderAll() {
+  setDate();
+  renderTasks();
+  renderWeek();
+  renderMeals();
+  renderGroceries();
+  renderNotes();
+}
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  }[char]));
+}
+
+function escapeAttr(value) {
+  return escapeHtml(value).replace(/`/g, "&#096;");
+}
+
+document.querySelector(".toolbar").addEventListener("click", event => {
+  const button = event.target.closest("[data-panel]");
+  if (!button) return;
+  document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
+  document.querySelectorAll(".panel").forEach(panel => panel.classList.remove("active"));
+  button.classList.add("active");
+  document.getElementById("panel-" + button.dataset.panel).classList.add("active");
+});
+
+document.addEventListener("change", event => {
+  const taskEl = event.target.closest(".task");
+  if (taskEl && event.target.type === "checkbox") {
+    const task = state.tasks.find(item => item.id === taskEl.dataset.id);
+    if (task) {
+      task.done = event.target.checked;
+      save();
+      renderTasks();
+    }
+  }
+
+  const groceryEl = event.target.closest(".grocery-item");
+  if (groceryEl && event.target.type === "checkbox") {
+    const item = state.groceries.find(entry => entry.id === groceryEl.dataset.id);
+    if (item) {
+      item.done = event.target.checked;
+      save();
+      renderGroceries();
+      renderMetrics();
+    }
+  }
+
+  if (event.target.matches("[data-day]")) {
+    state.meals[event.target.dataset.day] = event.target.value.trim();
+    save();
+    renderMetrics();
+  }
+});
+
+document.addEventListener("click", event => {
+  const taskDeleteId = event.target.dataset.taskDelete;
+  if (taskDeleteId) {
+    state.tasks = state.tasks.filter(task => task.id !== taskDeleteId);
+    save();
+    renderTasks();
+    return;
+  }
+
+  const deleteId = event.target.dataset.delete;
+  if (!deleteId) return;
+  state.groceries = state.groceries.filter(item => item.id !== deleteId);
+  save();
+  renderGroceries();
+  renderMetrics();
+});
+
+document.getElementById("taskForm").addEventListener("submit", event => {
+  event.preventDefault();
+  const name = document.getElementById("taskName").value.trim();
+  if (!name) return;
+  state.tasks.push({
+    id: uid("task"),
+    group: document.getElementById("taskGroup").value,
+    name,
+    note: "Custom task",
+    owner: document.getElementById("taskOwner").value.trim() || "Home",
+    done: false
+  });
+  event.currentTarget.reset();
+  save();
+  renderTasks();
+});
+
+document.getElementById("groceryForm").addEventListener("submit", event => {
+  event.preventDefault();
+  const name = document.getElementById("groceryName").value.trim();
+  if (!name) return;
+  state.groceries.push({
+    id: uid("grocery"),
+    name,
+    aisle: document.getElementById("groceryAisle").value,
+    done: false
+  });
+  event.currentTarget.reset();
+  save();
+  renderGroceries();
+  renderMetrics();
+});
+
+document.getElementById("resetToday").addEventListener("click", () => {
+  state.tasks.forEach(task => {
+    if (task.group === "morning" || task.group === "evening") task.done = false;
+  });
+  save();
+  renderTasks();
+});
+
+document.getElementById("resetAll").addEventListener("click", () => {
+  state.tasks.forEach(task => task.done = false);
+  state.groceries.forEach(item => item.done = false);
+  save();
+  renderTasks();
+  renderGroceries();
+});
+
+document.getElementById("clearBought").addEventListener("click", () => {
+  state.groceries = state.groceries.filter(item => !item.done);
+  save();
+  renderGroceries();
+  renderMetrics();
+});
+
+document.getElementById("seedGroceries").addEventListener("click", () => {
+  const staples = [
+    ["Eggs", "Dairy"],
+    ["Greens", "Produce"],
+    ["Rice", "Pantry"],
+    ["Dish soap", "Household"],
+    ["Pet treats", "Pet"]
+  ];
+  staples.forEach(([name, aisle]) => {
+    if (!state.groceries.some(item => item.name.toLowerCase() === name.toLowerCase())) {
+      state.groceries.push({ id: uid("grocery"), name, aisle, done: false });
+    }
+  });
+  save();
+  renderGroceries();
+  renderMetrics();
+});
+
+document.getElementById("clearMeals").addEventListener("click", () => {
+  state.meals = { ...seed.meals };
+  save();
+  renderMeals();
+  renderMetrics();
+});
+
+document.getElementById("manualSync").addEventListener("click", () => {
+  loadFromSupabase();
+});
+
+document.getElementById("authForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  if (!db) {
+    setAuthMessage("Supabase could not load. Check your internet connection and try again.");
+    return;
+  }
+  const email = document.getElementById("authEmail").value.trim();
+  if (!email) return;
+  setAuthMessage("Sending magic link...");
+  const { error } = await db.auth.signInWithOtp({
+    email,
+    options: {
+      emailRedirectTo: window.location.origin + window.location.pathname
+    }
+  });
+  if (error) {
+    setAuthMessage(error.message);
+    return;
+  }
+  setAuthMessage("Magic link sent. Open it from this device to sign in.");
+});
+
+document.getElementById("signOut").addEventListener("click", async () => {
+  if (db) await db.auth.signOut();
+});
+
+let noteTimer;
+document.getElementById("homeNotes").addEventListener("input", event => {
+  state.notes = event.target.value;
+  document.getElementById("savedStatus").textContent = "Saving";
+  clearTimeout(noteTimer);
+  noteTimer = setTimeout(() => {
+    save();
+    document.getElementById("savedStatus").textContent = "Saved";
+  }, 250);
+});
+
+renderAll();
+initializeAuth();
+</script>
+</body>
+</html>
