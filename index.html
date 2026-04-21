@@ -639,12 +639,13 @@
   <div class="auth-card">
     <span class="eyebrow" style="color:var(--sage);border-color:var(--line);background:var(--sage-2)">Private household</span>
     <h1>Casa HQ</h1>
-    <p>Sign in once with an approved household email. This device will stay signed in until you tap Sign Out or clear browser data.</p>
+    <p>Sign in with your household email and password. This device will stay signed in until you tap Sign Out or clear browser data.</p>
     <form class="auth-form" id="authForm">
-      <input id="authEmail" type="email" autocomplete="email" required placeholder="you@example.com">
-      <button class="btn" type="submit">Send Magic Link</button>
+      <input id="authEmail" type="email" autocomplete="username" required placeholder="you@example.com">
+      <input id="authPassword" type="password" autocomplete="current-password" required minlength="6" placeholder="Password">
+      <button class="btn" type="submit">Sign In</button>
     </form>
-    <div class="auth-message" id="authMessage">Only invited emails can access the shared home data.</div>
+    <div class="auth-message" id="authMessage">Only invited household accounts can access the shared home data.</div>
   </div>
 </section>
 
@@ -999,7 +1000,7 @@ async function initializeAuth() {
   if (data.session) {
     showSignedIn(data.session);
   } else {
-    showSignedOut("Sign in once on this device. Casa HQ will remember you after the magic link opens.");
+    showSignedOut("Sign in once on this device. Casa HQ will remember you.");
   }
   db.auth.onAuthStateChange((_event, session) => {
     if (session) showSignedIn(session);
@@ -1441,19 +1442,18 @@ document.getElementById("authForm").addEventListener("submit", async event => {
     return;
   }
   const email = document.getElementById("authEmail").value.trim();
-  if (!email) return;
-  setAuthMessage("Sending magic link...");
-  const { error } = await db.auth.signInWithOtp({
+  const password = document.getElementById("authPassword").value;
+  if (!email || !password) return;
+  setAuthMessage("Signing in...");
+  const { error } = await db.auth.signInWithPassword({
     email,
-    options: {
-      emailRedirectTo: window.location.origin + window.location.pathname
-    }
+    password
   });
   if (error) {
     setAuthMessage(error.message);
     return;
   }
-  setAuthMessage("Magic link sent. Open it from this device to sign in.");
+  setAuthMessage("Signed in. Loading Casa HQ...");
 });
 
 document.getElementById("signOut").addEventListener("click", async () => {
